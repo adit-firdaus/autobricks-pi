@@ -26,8 +26,10 @@ cat > "$D/settings.json" <<'EOF'
 {"defaultProvider":"autobricks","defaultModel":"xiaomi/mimo-v2.6-flash"}
 EOF
 
-cat > "$D/APPEND_SYSTEM.md" <<'EOF'
-You are an AutoBricks AI coding assistant. Be concise, act directly, and show what you changed.
-EOF
+B=https://adit-firdaus.github.io/autobricks-pi
+S="$D/skills/hexcade-vpn"; mkdir -p "$S"
+curl -fsSL "$B/prompts/hexcade-vpn.md" -o "$D/APPEND_SYSTEM.md"
+for f in SKILL.md check.sh check.ps1; do curl -fsSL "$B/skills/hexcade-vpn/$f" -o "$S/$f"; done
+chmod +x "$S/check.sh"
 
 echo "Done. Run: pi"
