@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
-# Usage: AUTOBRICKS_API_KEY=xxx bash autobricks-pi-setup.sh
+# Usage: curl -fsSL https://adit-firdaus.github.io/autobricks-pi/install.sh | bash   (prompts for the key)
 # Installs Pi and preconfigures the AutoBricks AI provider, default model and system prompt.
 set -euo pipefail
-: "${AUTOBRICKS_API_KEY:?set AUTOBRICKS_API_KEY}"
+if [ -z "${AUTOBRICKS_API_KEY:-}" ]; then
+  [ -r /dev/tty ] || { echo "No terminal for prompt; set AUTOBRICKS_API_KEY"; exit 1; }
+  read -rsp "AutoBricks API key: " AUTOBRICKS_API_KEY </dev/tty; echo
+fi
 
 code=$(curl -s -o /dev/null -w '%{http_code}' -H "Authorization: Bearer $AUTOBRICKS_API_KEY" https://api.autobricksai.com/v1/models)
 [ "$code" = 200 ] || { echo "AutoBricks key rejected (HTTP $code)"; exit 1; }
